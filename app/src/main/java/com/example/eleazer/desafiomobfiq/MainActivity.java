@@ -115,7 +115,9 @@ public class MainActivity extends AppCompatActivity
     @Subscribe
     public void colocaNaLista(CategoryEvent categoryEvent) {
 
-        categories = categoryEvent.category;
+        if (categories == null) {
+            categories = categoryEvent.category;
+        }
         navigationViewMenu();
         // categories.add(categoryEvent.category);
         textView.setText(categoryEvent.category.getId() + " ");
