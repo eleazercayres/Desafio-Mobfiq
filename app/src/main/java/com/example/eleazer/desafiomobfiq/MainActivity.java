@@ -82,8 +82,6 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        navigationViewMenu();
-
     }
 
     private void navigationViewMenu() {
@@ -117,8 +115,9 @@ public class MainActivity extends AppCompatActivity
     @Subscribe
     public void colocaNaLista(CategoryEvent categoryEvent) {
 
-       // categories.add(categoryEvent.category);
         categories = categoryEvent.category;
+        navigationViewMenu();
+        // categories.add(categoryEvent.category);
         textView.setText(categoryEvent.category.getId() + " ");
         System.out.println();
         /*adapter = new MensagemAdapter(idDoCliente, mensagens, this);
@@ -175,8 +174,18 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        String nameMenu = (String) item.getTitle();
+        if (categories != null && categories.getCategories() != null && categories.getCategories().size() > 0) {
 
-        if (id == R.id.nav_camera) {
+            List<Category> categoriList = categories.getCategories();
+
+            for (Category category : categoriList) {
+                if (category.getName().equalsIgnoreCase(nameMenu)){
+                    System.out.println(category.getId());
+                }
+            }
+        }
+       /* if (id == R.id.nav_camera) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
 
@@ -189,7 +198,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_send) {
 
         }
-
+*/
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
