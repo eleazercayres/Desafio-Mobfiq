@@ -2,9 +2,9 @@
 package com.example.eleazer.desafiomobfiq.modelos;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
-/* Time: 2017-06-16 18:31:8 @author freecodeformat.com @website http://www.freecodeformat.com/json2javabean.php */
-public class Skus {
+public class Skus implements Serializable {
 
     @SerializedName("Id")
     private String id;

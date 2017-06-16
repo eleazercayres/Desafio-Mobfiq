@@ -1,10 +1,10 @@
-/* Copyright 2017 freecodeformat.com */
 package com.example.eleazer.desafiomobfiq.modelos;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
-public class Variations {
+public class Variations implements Serializable {
 
     @SerializedName("Voltagem")
     private List<String> voltagem;

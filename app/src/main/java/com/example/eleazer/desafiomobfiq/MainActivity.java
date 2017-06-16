@@ -12,15 +12,18 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.example.eleazer.desafiomobfiq.app.AppApplication;
+import com.example.eleazer.desafiomobfiq.callback.EnviarCategoryCallback;
 import com.example.eleazer.desafiomobfiq.callback.OuvirCategoryCallback;
 import com.example.eleazer.desafiomobfiq.component.AppComponent;
 import com.example.eleazer.desafiomobfiq.event.CategoryEvent;
 import com.example.eleazer.desafiomobfiq.event.FailureEvent;
 import com.example.eleazer.desafiomobfiq.modelos.Categories;
 import com.example.eleazer.desafiomobfiq.modelos.Category;
+import com.example.eleazer.desafiomobfiq.modelos.Query;
 import com.example.eleazer.desafiomobfiq.service.AppService;
 
 import org.greenrobot.eventbus.EventBus;
@@ -126,6 +129,10 @@ public class MainActivity extends AppCompatActivity
         listaDeMensagens.setAdapter(adapter);
 
         ouvirMensagem(categoryEvent);*/
+    }
+
+    public void carregarProdutos() {
+        appService.enviar(new Query("", 0, 1)).enqueue(new EnviarCategoryCallback());
     }
 
     private void injectAll() {

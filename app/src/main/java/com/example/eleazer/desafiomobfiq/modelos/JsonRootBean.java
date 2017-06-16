@@ -4,9 +4,9 @@ package com.example.eleazer.desafiomobfiq.modelos;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
-/* Time: 2017-06-16 18:31:8 @author freecodeformat.com @website http://www.freecodeformat.com/json2javabean.php */
-public class JsonRootBean {
+public class JsonRootBean implements Serializable {
 
     @SerializedName("Size")
     private int size;

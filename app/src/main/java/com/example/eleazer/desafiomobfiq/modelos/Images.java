@@ -3,8 +3,9 @@ package com.example.eleazer.desafiomobfiq.modelos;
 
 import com.google.gson.annotations.SerializedName;
 
-/* Time: 2017-06-16 18:31:8 @author freecodeformat.com @website http://www.freecodeformat.com/json2javabean.php */
-public class Images {
+import java.io.Serializable;
+
+public class Images implements Serializable {
 
     @SerializedName("ImageUrl")
     private String imageurl;
