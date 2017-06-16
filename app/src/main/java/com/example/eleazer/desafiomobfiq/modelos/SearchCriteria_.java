@@ -1,25 +1,38 @@
 
 package com.example.eleazer.desafiomobfiq.modelos;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gson.annotations.SerializedName;
 
-public class SearchCriteria_ {
+import java.io.Serializable;
 
+public class SearchCriteria_ implements Serializable {
+
+    @SerializedName("Query")
     private Object query;
+    @SerializedName("OrderBy")
     private Integer orderBy;
+    @SerializedName("Size")
     private Integer size;
+    @SerializedName("Offset")
     private Object offset;
+    @SerializedName("Filter")
     private Object filter;
+    @SerializedName("ApiQuery")
     private String apiQuery;
+    @SerializedName("ProductId")
     private Object productId;
+    @SerializedName("Hotsite")
     private Object hotsite;
+    @SerializedName("RealProductId")
     private Object realProductId;
+    @SerializedName("EAN")
     private Object eAN;
+    @SerializedName("RealProductIdGroup")
     private Object realProductIdGroup;
+    @SerializedName("FacetItems")
     private Object facetItems;
+    @SerializedName("SearchApi")
     private Object searchApi;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     public Object getQuery() {
         return query;
@@ -123,14 +136,6 @@ public class SearchCriteria_ {
 
     public void setSearchApi(Object searchApi) {
         this.searchApi = searchApi;
-    }
-
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
     }
 
 }

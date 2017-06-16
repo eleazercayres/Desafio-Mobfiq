@@ -1,16 +1,20 @@
 
 package com.example.eleazer.desafiomobfiq.modelos;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gson.annotations.SerializedName;
 
-public class Redirect_ {
+import java.io.Serializable;
 
+public class Redirect_ implements Serializable {
+
+    @SerializedName("Id")
     private Integer id;
+    @SerializedName("SearchCriteria")
     private SearchCriteria_ searchCriteria;
+    @SerializedName("Title")
     private String title;
+    @SerializedName("Type")
     private Integer type;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     public Integer getId() {
         return id;
@@ -42,14 +46,6 @@ public class Redirect_ {
 
     public void setType(Integer type) {
         this.type = type;
-    }
-
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
     }
 
 }

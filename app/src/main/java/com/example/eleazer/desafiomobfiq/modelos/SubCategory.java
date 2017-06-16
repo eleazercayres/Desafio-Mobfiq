@@ -1,22 +1,32 @@
 
 package com.example.eleazer.desafiomobfiq.modelos;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gson.annotations.SerializedName;
 
-public class SubCategory {
+import java.io.Serializable;
 
+public class SubCategory implements Serializable {
+
+    @SerializedName("Id")
     private Integer id;
+    @SerializedName("Name")
     private String name;
+    @SerializedName("Image")
     private Object image;
+    @SerializedName("Redirect")
     private Redirect_ redirect;
+    @SerializedName("SubCategories")
     private Object subCategories;
+    @SerializedName("Highlight")
     private Boolean highlight;
+    @SerializedName("Icon")
     private Object icon;
+    @SerializedName("CategoryListOrder")
     private Integer categoryListOrder;
+    @SerializedName("CategoryTreeOrder")
     private Integer categoryTreeOrder;
+    @SerializedName("LinkId")
     private Integer linkId;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     public Integer getId() {
         return id;
@@ -96,14 +106,6 @@ public class SubCategory {
 
     public void setLinkId(Integer linkId) {
         this.linkId = linkId;
-    }
-
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
     }
 
 }
