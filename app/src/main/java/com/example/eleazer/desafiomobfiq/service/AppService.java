@@ -12,7 +12,7 @@ import retrofit2.http.POST;
 public interface AppService {
 
     @POST("/Search/Criteria")
-    Call<Void> enviar(@Body Query query);
+    Call<JsonRootBean> enviar(@Body Query query);
 
     @GET("/StorePreference/CategoryTree")
     Call<Categories> ouvirCategrias();

@@ -32,6 +32,7 @@ public class Products implements Serializable {
     private String images;
     @SerializedName("RealId")
     private String realid;
+
     public void setAvailability(boolean availability) {
          this.availability = availability;
      }

@@ -12,13 +12,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class EnviarCategoryCallback implements Callback<JsonRootBean> {
+public class CarregaProdutosCallback implements Callback<JsonRootBean> {
 
-    private MainActivity activity;
     private EventBus eventBus;
 
-    public EnviarCategoryCallback(EventBus eventBus, MainActivity activity) {
-        this.activity = activity;
+    public CarregaProdutosCallback(EventBus eventBus) {
         this.eventBus = eventBus;
     }
 

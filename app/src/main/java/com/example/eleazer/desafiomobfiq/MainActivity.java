@@ -8,21 +8,26 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
+import com.example.eleazer.desafiomobfiq.adapter.ProductAdapter;
 import com.example.eleazer.desafiomobfiq.app.AppApplication;
-import com.example.eleazer.desafiomobfiq.callback.EnviarCategoryCallback;
+import com.example.eleazer.desafiomobfiq.callback.CarregaProdutosCallback;
 import com.example.eleazer.desafiomobfiq.callback.OuvirCategoryCallback;
 import com.example.eleazer.desafiomobfiq.component.AppComponent;
 import com.example.eleazer.desafiomobfiq.event.CategoryEvent;
 import com.example.eleazer.desafiomobfiq.event.FailureEvent;
+import com.example.eleazer.desafiomobfiq.event.ProductEvent;
 import com.example.eleazer.desafiomobfiq.modelos.Categories;
 import com.example.eleazer.desafiomobfiq.modelos.Category;
+import com.example.eleazer.desafiomobfiq.modelos.JsonRootBean;
 import com.example.eleazer.desafiomobfiq.modelos.Query;
 import com.example.eleazer.desafiomobfiq.service.AppService;
 
@@ -48,10 +53,20 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.text)
     public TextView textView;
 
+    @BindView(R.id.recycler_view)
+    public RecyclerView recyclerView;
+
     @Inject
     EventBus eventBus;
 
     private Categories categories;
+    private JsonRootBean products;
+
+    private NavigationView navigationView;
+    private ProductAdapter adapter;
+
+    private int offset = 0;
+    private int size = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,17 +104,20 @@ public class MainActivity extends AppCompatActivity
 
     private void navigationViewMenu() {
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        if (navigationView == null) {
 
-        if (categories != null && categories.getCategories() != null && categories.getCategories().size() > 0) {
-            List<Category> categoriList = categories.getCategories();
+            navigationView = (NavigationView) findViewById(R.id.nav_view);
 
-            final Menu menu = navigationView.getMenu();
-            for (Category category : categoriList) {
-                menu.add(category.getName());
+            if (categories != null && categories.getCategories() != null && categories.getCategories().size() > 0) {
+                List<Category> categoriList = categories.getCategories();
+
+                final Menu menu = navigationView.getMenu();
+                for (Category category : categoriList) {
+                    menu.add(category.getName());
+                }
             }
+            navigationView.setNavigationItemSelectedListener(this);
         }
-        navigationView.setNavigationItemSelectedListener(this);
     }
 
     @Override
@@ -110,13 +128,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Subscribe
-    public void ouvirCategory(CategoryEvent mensagemEvent) {
-        Call<Categories> call = appService.ouvirCategrias();
-        call.enqueue(new OuvirCategoryCallback(eventBus, this));
-    }
-
-    @Subscribe
-    public void colocaNaLista(CategoryEvent categoryEvent) {
+    public void carregaMenu(CategoryEvent categoryEvent) {
 
         if (categories == null) {
             categories = categoryEvent.category;
@@ -131,8 +143,28 @@ public class MainActivity extends AppCompatActivity
         ouvirMensagem(categoryEvent);*/
     }
 
-    public void carregarProdutos() {
-        appService.enviar(new Query("", 0, 1)).enqueue(new EnviarCategoryCallback());
+    @Subscribe
+    public void carregaProduto(ProductEvent productEvent) {
+
+        products = productEvent.products;
+        adapter = new ProductAdapter(this, products.getProducts());
+
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(adapter);
+    }
+
+    @Subscribe
+    public void ouvirCategory(CategoryEvent mensagemEvent) {
+        Call<Categories> call = appService.ouvirCategrias();
+        call.enqueue(new OuvirCategoryCallback(eventBus, this));
+    }
+
+    @Subscribe
+    public void pesquisaProdutos(String query) {
+        Call<JsonRootBean> call = appService.enviar(new Query(query, offset, size));
+        call.enqueue(new CarregaProdutosCallback(eventBus));
     }
 
     private void injectAll() {
@@ -191,6 +223,7 @@ public class MainActivity extends AppCompatActivity
             for (Category category : categoriList) {
                 if (category.getName().equalsIgnoreCase(nameMenu)){
                     System.out.println(category.getId());
+                    pesquisaProdutos(category.getName());
                 }
             }
         }
