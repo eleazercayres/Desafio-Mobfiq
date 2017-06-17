@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.eleazer.desafiomobfiq.adapter.ProductAdapter;
 import com.example.eleazer.desafiomobfiq.app.AppApplication;
@@ -28,12 +29,14 @@ import com.example.eleazer.desafiomobfiq.event.ProductEvent;
 import com.example.eleazer.desafiomobfiq.modelos.Categories;
 import com.example.eleazer.desafiomobfiq.modelos.Category;
 import com.example.eleazer.desafiomobfiq.modelos.JsonRootBean;
+import com.example.eleazer.desafiomobfiq.modelos.Products;
 import com.example.eleazer.desafiomobfiq.modelos.Query;
 import com.example.eleazer.desafiomobfiq.service.AppService;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -50,9 +53,6 @@ public class MainActivity extends AppCompatActivity
 
     private AppComponent component;
 
-    @BindView(R.id.text)
-    public TextView textView;
-
     @BindView(R.id.recycler_view)
     public RecyclerView recyclerView;
 
@@ -67,6 +67,9 @@ public class MainActivity extends AppCompatActivity
 
     private int offset = 0;
     private int size = 10;
+    private String query;
+    private List<Products> listProduct;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,25 +137,36 @@ public class MainActivity extends AppCompatActivity
             categories = categoryEvent.category;
         }
         navigationViewMenu();
-        // categories.add(categoryEvent.category);
-        textView.setText(categoryEvent.category.getId() + " ");
-        System.out.println();
-        /*adapter = new MensagemAdapter(idDoCliente, mensagens, this);
-        listaDeMensagens.setAdapter(adapter);
-
-        ouvirMensagem(categoryEvent);*/
+        //Toast.makeText(this,"Carregado", Toast.LENGTH_SHORT).show();
     }
 
     @Subscribe
     public void carregaProduto(ProductEvent productEvent) {
 
-        products = productEvent.products;
-        adapter = new ProductAdapter(this, products.getProducts());
+        if (productEvent.products != null && productEvent.products.getSize() > 0){
+            products = productEvent.products;
 
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(adapter);
+            if (listProduct != null && listProduct.size() > 0) {
+
+                listProduct.addAll(products.getProducts());
+            } else {
+                listProduct = products.getProducts();
+            }
+            adapter = new ProductAdapter(this, listProduct){
+                @Override
+                public void load() {
+                    //implement your load more here
+                    offset = size+ 1;
+                    size = size + 11;
+                    pesquisaProdutos();
+                }
+            };
+
+            RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
+            recyclerView.setLayoutManager(mLayoutManager);
+            recyclerView.setItemAnimator(new DefaultItemAnimator());
+            recyclerView.setAdapter(adapter);
+        }
     }
 
     @Subscribe
@@ -162,7 +176,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Subscribe
-    public void pesquisaProdutos(String query) {
+    public void pesquisaProdutos() {
         Call<JsonRootBean> call = appService.enviar(new Query(query, offset, size));
         call.enqueue(new CarregaProdutosCallback(eventBus));
     }
@@ -222,25 +236,14 @@ public class MainActivity extends AppCompatActivity
 
             for (Category category : categoriList) {
                 if (category.getName().equalsIgnoreCase(nameMenu)){
-                    System.out.println(category.getId());
-                    pesquisaProdutos(category.getName());
+                    size = 10;
+                    offset = 0;
+                    query = category.getName();
+                    listProduct = new ArrayList<>();
+                    pesquisaProdutos();
                 }
             }
         }
-       /* if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-*/
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

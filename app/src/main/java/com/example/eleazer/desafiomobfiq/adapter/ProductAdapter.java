@@ -14,7 +14,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class ProductAdapter  extends RecyclerView.Adapter<ProductAdapter.MyViewHolder> {
+public abstract class ProductAdapter  extends RecyclerView.Adapter<ProductAdapter.MyViewHolder> {
 
     private Context mContext;
     private List<Products> products;
@@ -51,10 +51,17 @@ public class ProductAdapter  extends RecyclerView.Adapter<ProductAdapter.MyViewH
         holder.title.setText(product.getName());
         holder.count.setText(product.getBrand());
 
+        if (this.products.size() > 6){
+            if ((position >= getItemCount() - 1))
+                load();
+        }
+
         // loading album cover using Glide library
         Picasso.with(mContext).load(product.getSkus().get(0).getImages().get(0).getImageurl()).into(holder.thumbnail);
 
     }
+
+    public abstract void load();
 
    @Override
     public int getItemCount() {
