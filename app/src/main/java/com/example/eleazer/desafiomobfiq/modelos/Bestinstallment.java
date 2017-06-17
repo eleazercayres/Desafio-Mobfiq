@@ -32,7 +32,7 @@ public class Bestinstallment implements Serializable {
     public void setTotal(double total) {
          this.total = total;
      }
-     public double getTotal() {
+     public Double getTotal() {
          return total;
      }
 

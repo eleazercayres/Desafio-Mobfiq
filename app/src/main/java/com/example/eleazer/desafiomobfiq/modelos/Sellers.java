@@ -45,7 +45,7 @@ public class Sellers implements Serializable {
     public void setPrice(double price) {
          this.price = price;
      }
-     public double getPrice() {
+     public Double getPrice() {
          return price;
      }
 
